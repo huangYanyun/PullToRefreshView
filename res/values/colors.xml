@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--下拉刷新绘制圆  -->
+    <color name="bl_refresh_circle">#584944</color>
+</resources>
