@@ -46,6 +46,7 @@ public abstract class BLPullControllerBase extends RelativeLayout implements BLP
 		mRefreshView.init();
 		addPullDelegate(mRefreshView);
 		refreshState.addRefreshStateDelegate(mRefreshView);
+		mRefreshView.setRefreshStateDelegate(this);
 		int refreshViewHeight = mRefreshView.getRefreshViewHeight();
 		maxGap = refreshViewHeight;
 		setMaxGap(refreshViewHeight);
@@ -108,13 +109,14 @@ public abstract class BLPullControllerBase extends RelativeLayout implements BLP
 			setRefreshing();
 		}
 		for(int i = 0; i < mPullDelegates.size();i++){
-			mPullDelegates.get(i).stopPull(refreshState);
+			mPullDelegates.get(i).stopPull(refreshState.refreshStateFlag);
 		}
 	}
 	public void refreshCompletely(){
-		resetSubView();
-		mRefreshView.reset();
-		refreshState.makePullToRefresh();
+		refreshState.makeRefreshCompletet();
+//		resetSubView();
+//		mRefreshView.reset();
+//		refreshState.makePullToRefresh();
 	}
 	
 	@Override
@@ -133,7 +135,7 @@ public abstract class BLPullControllerBase extends RelativeLayout implements BLP
 		}
 	}
 	@Override
-	public void stopPull(BLPullRefreshState state) {}
+	public void stopPull(int state) {}
 	
 	public void setOnLoadingLintener(OnLoadingListener listener){
 		this.loadingListener = listener;

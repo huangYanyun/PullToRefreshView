@@ -8,11 +8,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-public class BLPullGridView extends HeadGridView implements RefreshStateDelegate, BLPullDelegate{
+public class BLPullGridView extends GridViewWithHeaderAndFooter implements RefreshStateDelegate, BLPullDelegate{
 	
 	String TAG = "PullListView";
 	public int mLastMotionY = LASTMOTION_NOTSET;
@@ -218,10 +216,10 @@ public class BLPullGridView extends HeadGridView implements RefreshStateDelegate
 	}
 
 	@Override
-	public void stopPull(BLPullRefreshState state) {
-		if(state.isRefreshStatePullToRefresh()){
+	public void stopPull(int state) {
+		if(BLPullRefreshState.PULL_TO_REFRESH == state){
 			reset();
-		}else if(state.isRefreshStateRefreshing()){
+		}else if(BLPullRefreshState.REFRESHING == state){
 			if(getTop() > maxGap){
 				setTopMargin(getTop(),maxGap);
 			}

@@ -444,11 +444,10 @@ int id action_menu_presenter 0x7f090006
 int id action_mode_bar 0x7f09003b
 int id action_mode_bar_stub 0x7f09003a
 int id action_mode_close_button 0x7f090023
-int id action_settings 0x7f090060
+int id action_settings 0x7f09005f
 int id activity_chooser_view_content 0x7f090024
 int id alertTitle 0x7f09002e
 int id always 0x7f090019
-int id animation_view 0x7f09005f
 int id beginning 0x7f09001e
 int id buttonPanel 0x7f090034
 int id cancel_action 0x7f090052
@@ -597,10 +596,11 @@ int string abc_toolbar_collapse_description 0x7f0a0004
 int string action_settings 0x7f0a0014
 int string app_name 0x7f0a0012
 int string hello_world 0x7f0a0013
-int string loading 0x7f0a0019
-int string no_more_load 0x7f0a001a
-int string pull_to_load 0x7f0a0018
+int string loading 0x7f0a001a
+int string no_more_load 0x7f0a001b
+int string pull_to_load 0x7f0a0019
 int string pull_to_refresh 0x7f0a0015
+int string refresh_complete 0x7f0a0018
 int string refreshing 0x7f0a0017
 int string release_to_refresh 0x7f0a0016
 int string status_bar_notification_info_overflow 0x7f0a0011

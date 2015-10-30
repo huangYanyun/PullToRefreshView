@@ -216,10 +216,10 @@ public class BLPullScrollView extends ScrollView implements RefreshStateDelegate
 	}
 
 	@Override
-	public void stopPull(BLPullRefreshState state) {
-		if(state.isRefreshStatePullToRefresh()){
+	public void stopPull(int state) {
+		if(BLPullRefreshState.PULL_TO_REFRESH == state){
 			reset();
-		}else if(state.isRefreshStateRefreshing()){
+		}else if(BLPullRefreshState.REFRESH_COMPLETET == state){
 			if(getTop() > maxGap){
 				setTopMargin(getTop(),maxGap);
 			}

@@ -197,6 +197,7 @@ public class BLPullListView extends ListView implements RefreshStateDelegate, BL
 
 	public void reset() {
 		mLastMotionY = LASTMOTION_NOTSET;
+		startY = 0;
 		setTopMargin(getTop(),0);
 	}
 
@@ -217,10 +218,10 @@ public class BLPullListView extends ListView implements RefreshStateDelegate, BL
 	}
 
 	@Override
-	public void stopPull(BLPullRefreshState state) {
-		if(state.isRefreshStatePullToRefresh()){
+	public void stopPull(int state) {
+		if(BLPullRefreshState.PULL_TO_REFRESH == state){
 			reset();
-		}else if(state.isRefreshStateRefreshing()){
+		}else if(BLPullRefreshState.REFRESHING == state){
 			if(getTop() > maxGap){
 				setTopMargin(getTop(),maxGap);
 			}

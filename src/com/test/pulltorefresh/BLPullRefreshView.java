@@ -3,31 +3,26 @@ package com.test.pulltorefresh;
 import com.example.test_.R;
 import com.test.pulltorefresh.BLPullRefreshState.RefreshStateDelegate;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.view.animation.Animation.AnimationListener;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class BLPullRefreshView extends RelativeLayout implements BLPullDelegate, RefreshStateDelegate,OnAnimationListener{
+public class BLPullRefreshView extends RelativeLayout implements BLPullDelegate, RefreshStateDelegate{
 
 	String TAG = "RefreshView";
 	private Context mContext;
-	private BLPullRefreshAnimationView animationView;
-	private ImageView image;
-	ResetAnimationEndListener resetEndListener;
+	private TextView text;
+	RefreshStateDelegate delegate;
+	
+	public void setRefreshStateDelegate(RefreshStateDelegate delegate) {
+		this.delegate = delegate;
+	}
 
 	private int mHeight = -1;
 	
@@ -41,16 +36,13 @@ public class BLPullRefreshView extends RelativeLayout implements BLPullDelegate,
 		super(context, attrs, defStyleAttr);
 		this.mContext = context;
 		LayoutInflater.from(mContext).inflate(R.layout.refresh_view, this, true);
-		animationView = (BLPullRefreshAnimationView) findViewById(R.id.animation_view);
-		animationView.setAnimationListener(this);
-		image = (ImageView) findViewById(R.id.image);
+		text = (TextView) findViewById(R.id.text);
 	}
 	
 	public void init() {
 		
 		measureView();
 		mHeight = getMeasuredHeight();
-		animationView.setParentHeight(mHeight);
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) getLayoutParams();
 		params.topMargin = (int) -mHeight;
 		setLayoutParams(params);
@@ -58,10 +50,6 @@ public class BLPullRefreshView extends RelativeLayout implements BLPullDelegate,
 	
 	int getRefreshViewHeight(){
 		return mHeight;
-	}
-	
-	public void setResetEndListener(ResetAnimationEndListener resetEndListener) {
-		this.resetEndListener = resetEndListener;
 	}
 	
 	private void measureView() 
@@ -93,14 +81,13 @@ public class BLPullRefreshView extends RelativeLayout implements BLPullDelegate,
 	public void onPulling(float offsetY) {
 		float topMargin = offsetY - mHeight;
 		setTopMargin(topMargin);
-		animationView.drawCircle(offsetY,mHeight);
 	}
 	
 	@Override
-	public void stopPull(BLPullRefreshState state) {
-		if(state.isRefreshStatePullToRefresh()){
-			reset();
-		}else if(state.isRefreshStateRefreshing()){
+	public void stopPull(int state) {
+		if(BLPullRefreshState.PULL_TO_REFRESH == state){
+			setTopMargin(getTop(), -mHeight);
+		}else if(BLPullRefreshState.REFRESHING == state){
 			if(getTop() > 0){
 				setTopMargin(getTop(),0);
 			}
@@ -128,55 +115,25 @@ public class BLPullRefreshView extends RelativeLayout implements BLPullDelegate,
 		animation.setDuration(300);
 		startAnimation(animation);
 	}
-	
-	public void reset(){
-		animationView.reset();
-		final int origTop = getTop();
-		final int distTop = -mHeight;
-		
-		Animation animation = new Animation() {
-			 @Override
-			 protected void applyTransformation(float interpolatedTime, Transformation t)
-			 {
-				 setTopMargin(origTop + (int) ((distTop - origTop) * interpolatedTime));
-			 }
-		};
-		animation.setAnimationListener(new AnimationListener(){
 
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-				resetEndListener.animationEnd();
-			}
-			
-		});
-		animation.setDuration(300);
-		startAnimation(animation);
-	}
 	@Override
 	public void setPullToRefresh() {
-		animationView.reset();
-		animationView.setVisibility(View.VISIBLE);
-		image.setVisibility(View.GONE);
+		text.setText(R.string.pull_to_refresh);
 	}
 	@Override
 	public void setReleaseToRefresh() {
+		text.setText(R.string.release_to_refresh);
 	}
 	@Override
 	public void setRefreshing() {
+		text.setText(R.string.refreshing);
 	}
 	@Override
 	public void stopPull() {}
 	
 	@Override
 	public void refreshCompletely() {
+		text.setText(R.string.refresh_complete);
 		final float from = getTop();
 		final int to = -mHeight;
 		Animation animation = new Animation() {
@@ -199,38 +156,14 @@ public class BLPullRefreshView extends RelativeLayout implements BLPullDelegate,
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				setPullToRefresh();
+				if(delegate != null){
+					delegate.setPullToRefresh();
+				}
 			}
 		});
 		animation.setDuration(300);
 		startAnimation(animation);
 		
-	}
-	
-	@SuppressLint("NewApi")
-	@Override
-	public void animationEnd() {
-		animationView.setVisibility(View.GONE);
-		image.setVisibility(View.VISIBLE);
-		
-		ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.5f, 1f);
-		valueAnimator.setInterpolator(new LinearInterpolator());
-		valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
-
-			@Override
-			public void onAnimationUpdate(ValueAnimator animation) {
-				Float animatedValue = (Float) animation.getAnimatedValue();
-				image.setScaleX(animatedValue);
-				image.setScaleY(animatedValue);
-			}
-		});
-		valueAnimator.addListener(new AnimatorListenerAdapter() {
-			@Override
-			public void onAnimationEnd(Animator animation) {
-				super.onAnimationEnd(animation);
-			}
-		});
-		valueAnimator.setDuration(350);
-		valueAnimator.start();
 	}
 	
 }

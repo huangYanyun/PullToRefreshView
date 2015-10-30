@@ -2003,11 +2003,10 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f09003b;
         public static final int action_mode_bar_stub=0x7f09003a;
         public static final int action_mode_close_button=0x7f090023;
-        public static final int action_settings=0x7f090060;
+        public static final int action_settings=0x7f09005f;
         public static final int activity_chooser_view_content=0x7f090024;
         public static final int alertTitle=0x7f09002e;
         public static final int always=0x7f090019;
-        public static final int animation_view=0x7f09005f;
         public static final int beginning=0x7f09001e;
         public static final int buttonPanel=0x7f090034;
         public static final int cancel_action=0x7f090052;
@@ -2235,10 +2234,11 @@ containing a value of this type.
         public static final int action_settings=0x7f0a0014;
         public static final int app_name=0x7f0a0012;
         public static final int hello_world=0x7f0a0013;
-        public static final int loading=0x7f0a0019;
-        public static final int no_more_load=0x7f0a001a;
-        public static final int pull_to_load=0x7f0a0018;
+        public static final int loading=0x7f0a001a;
+        public static final int no_more_load=0x7f0a001b;
+        public static final int pull_to_load=0x7f0a0019;
         public static final int pull_to_refresh=0x7f0a0015;
+        public static final int refresh_complete=0x7f0a0018;
         public static final int refreshing=0x7f0a0017;
         public static final int release_to_refresh=0x7f0a0016;
         /**  Text to use when the number in a notification info is too large
